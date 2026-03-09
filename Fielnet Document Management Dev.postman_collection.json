@@ -1,0 +1,459 @@
+{
+	"info": {
+		"_postman_id": "4bd112aa-79b5-4756-aa77-bf11d1ece87b",
+		"name": "ECM Document Management Dev",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29921727"
+	},
+	"item": [
+		{
+			"name": "Create Document",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceType\": \"es1_homepatientattestationform\",\r\n    \"appId\": \"ecmdocmgmt\",\r\n    \"appUser\": \"postman\",\r\n    \"body\": {\r\n        \"metadata\": [\r\n            {\r\n                \"propertyName\": \"DocumentTitle\",\r\n                \"propertyValue\": \"Test Title 2\"\r\n            },\r\n            {\r\n                \"propertyName\": \"facilityNumber\",\r\n                \"propertyValue\": \"110024\"\r\n            },\r\n            {\r\n                \"propertyName\": \"patientId\",\r\n                \"propertyValue\": \"080808\"\r\n            },\r\n            {\r\n                \"propertyName\": \"patientFirstName\",\r\n                \"propertyValue\": \"John\"\r\n            },\r\n            {\r\n                \"propertyName\": \"patientLastName\",\r\n                \"propertyValue\": \"Doe\"\r\n            },\r\n            {\r\n                \"propertyName\": \"dateOfSignature\",\r\n                \"propertyValue\": \"2012-01-31\"\r\n            }\r\n        ],\r\n        \"content\": {\r\n            \"title\": \"C0B0FA823.pdf\",\r\n            \"contentType\": \"application/pdf\",\r\n            \"data\": \"JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDQyPj5zdHJlYW0KeJwrVDAzNFIwAEEDA3NLIxAFBDAqOZeXSz84L7/cQMElXyFQAQDg4goOCmVuZHN0cmVhbQplbmRvYmoKNCAwIG9iago8PC9Db250ZW50cyA1IDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L1Byb2NTZXQgNiAwIFIvWE9iamVjdDw8L1Nub3cwIDcgMCBSPj4+Pi9UeXBlL1BhZ2U+PgplbmRvYmoKMSAwIG9iago8PC9QYWdlcyAyIDAgUi9UeXBlL0NhdGFsb2c+PgplbmRvYmoKMyAwIG9iago8PC9DcmVhdGlvbkRhdGUoRDoyMDIxMDExMjIxNDYzNi0wOCcwMCcpL01vZERhdGUoRDoyMDIxMDExMjIxNDYzNi0wOCcwMCcpL1Byb2R1Y2VyKGlUZXh0riA3LjAuNSCpMjAwMC0yMDE3IGlUZXh0IEdyb3VwIE5WIFwoQUdQTC12ZXJzaW9uXCkpPj4KZW5kb2JqCjIgMCBvYmoKPDwvQ291bnQgMS9LaWRzWzQgMCBSXS9UeXBlL1BhZ2VzPj4KZW5kb2JqCjYgMCBvYmoKWy9QREYgL0ltYWdlQl0KZW5kb2JqCjcgMCBvYmoKPDwvQml0c1BlckNvbXBvbmVudCAxL0NvbG9yU3BhY2UvRGV2aWNlR3JheS9EZWNvZGVQYXJtczw8L0NvbHVtbnMgMTYzMi9FbmNvZGVkQnl0ZUFsaWduIGZhbHNlL0VuZE9mQmxvY2sgZmFsc2UvRW5kT2ZMaW5lIGZhbHNlL0sgLTEvUm93cyAyMTEyPj4vRmlsdGVyL0NDSVRURmF4RGVjb2RlL0hlaWdodCAyMTEyL0xlbmd0aCA2MDgvTmFtZS9Tbm93MC9TdWJ0eXBlL0ltYWdlL1R5cGUvWE9iamVjdC9XaWR0aCAxNjMyPj5zdHJlYW0K/////////////////5kFM7W3zsEeQQUyNXOxIF8mZnD/+Sx9r///8qT52UPH8f///7X/kMigZmDnBTRlzJzLvzMig84KdBmguQNmDMyIYycyhmDPnnx8JhB/phD8JhPwmE/CYTCYQeEwnhB9P+PggWcemh63xpqnGh/ROGifSdnVycNE4/6Jw5OJo0T7Pz5LKJw0T6icOSzJxRPvp6H6en4+nSfoRfoaehp6FJ6HpN3/pP+k3T6RrC9JNpJN1T3/kQP/+//+F///5EaxVxsP//rj/1+P/9h/b//x//RPv//7fwb////6///wb8sJ//+Xp//5ev/wfu//a+9rt6+7baXav4Z7Oa3+2vwz22vZ5Wt8M92eVrtqb17HFSEsg9+P2OM2DsbGyIosbGxXHFd9/392RR+7Io/3drZFH/DCDCf8Mm/wwg14aaw+GEGgwsNYYURERERxEREREREREREfK+ulj1DCj/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wAQAQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAyNTUgMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAowMDAwMDAwMzAwIDAwMDAwIG4gCjAwMDAwMDAxMjMgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwNTA4IDAwMDAwIG4gCjAwMDAwMDA1MzggMDAwMDAgbiAKdHJhaWxlcgo8PC9JRCBbPGYxMTI4MmIwNjM1NWJiNjBjNmE3NmQ5ODdiNGY0Zjk0PjxmMTEyODJiMDYzNTViYjYwYzZhNzZkOTg3YjRmNGY5ND5dL0luZm8gMyAwIFIvUm9vdCAxIDAgUi9TaXplIDg+PgolaVRleHQtNy4wLjUKc3RhcnR4cmVmCjE0MTgKJSVFT0YK\"\r\n        }\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/document",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"document"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Document Multipart",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "jsonResource",
+							"value": "{\n    \"resourceType\": \"es1_homepatientattestationform\",\n    \"appId\": \"ecmdocmgmt\",\n    \"appUser\": \"postman\",\n    \"body\": {\n        \"metadata\": [\n            {\n                \"propertyName\": \"DocumentTitle\",\n                \"propertyValue\": \"Test Title 77\"\n            },\n            {\n                \"propertyName\": \"facilityNumber\",\n                \"propertyValue\": \"110024\"\n            },\n            {\n                \"propertyName\": \"patientId\",\n                \"propertyValue\": \"080808\"\n            },\n            {\n                \"propertyName\": \"patientFirstName\",\n                \"propertyValue\": \"John\"\n            },\n            {\n                \"propertyName\": \"patientLastName\",\n                \"propertyValue\": \"Doe\"\n            },\n            {\n                \"propertyName\": \"dateOfSignature\",\n                \"propertyValue\": \"2012-01-31\"\n            }\n        ]\n    }\n}",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/dkuvshinov/Downloads/response.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/document/multipart",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"document",
+						"multipart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Documents",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					},
+					{
+						"key": "password_",
+						"value": "2C54486E6AAF3E33EFD29952F1314D70"
+					},
+					{
+						"key": "username_",
+						"value": "SVC_KFP8_GCDADMIN_D"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceType\": \"patientDocs\",\r\n    \"appId\": \"ikcdocmgmt\",\r\n    \"appUser\": \"postman\",\r\n    \"body\": {\r\n        \"propertiesToRetrieve\": [\r\n            \"documentTitle\",\r\n            \"patientLastName\",\r\n            \"patientFirstName\",\r\n            \"eventDateTime\",\r\n            \"patientId\",\r\n            \"facilityNumber\",\r\n            \"millenniumMRN\",\r\n            \"speciality\",\r\n            \"source\"\r\n        ],\r\n        \"includeContent\": true,\r\n        \"currentVersionOnly\": true,\r\n        \"searchFilter\": [\r\n            {\r\n                \"propertyName\": \"Id\",\r\n                \"propertyValue\": \"{8B86888C-1342-4BE6-8197-9F10389FB47E}\"\r\n            }\r\n        ],\r\n        \"sortBy\": [\r\n            {\r\n                \"propertyName\": \"patientId\"\r\n            }\r\n        ]\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/document/search",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"document",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Product Recall",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					},
+					{
+						"key": "password_",
+						"value": "2C54486E6AAF3E33EFD29952F1314D70"
+					},
+					{
+						"key": "username_",
+						"value": "SVC_KFP8_GCDADMIN_D"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceType\": \"patientDocs\",\r\n    \"appId\": \"ecmdocmgmt\",\r\n    \"appUser\": \"postman\",\r\n    \"body\": {\r\n        \"propertiesToRetrieve\": [\r\n            \"guid\",\r\n            \"documentType\",\r\n            \"documentTypeCode\",\r\n            \"productRecallId\",\r\n            \"version\"\r\n        ],\r\n        \"includeContent\": true,\r\n        \"includeMappedPropertiesOnly\":true,\r\n        \"currentVersionOnly\": true,\r\n        \"searchFilter\": [\r\n            {\r\n                \"propertyName\": \"DVAProductRecallId\",\r\n                \"propertyValue\": \"11111\"\r\n            }\r\n        ]\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/document/search",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"document",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Content",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					}
+				],
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/document/content?guid=%7BA0D5897F-0000-C618-AD65-5A5132A8D073%7D",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"document",
+						"content"
+					],
+					"query": [
+						{
+							"key": "guid",
+							"value": "%7BA0D5897F-0000-C618-AD65-5A5132A8D073%7D"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Document",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceType\": \"patientDocs\",\r\n    \"appId\": \"ecmdocmgmt\",\r\n    \"appUser\": \"postman\",\r\n    \"body\": {\r\n        \"searchFilter\": [\r\n            {\r\n                \"propertyName\": \"guid\",\r\n                \"propertyValue\": \"{A03AAA95-0000-C817-AB46-C06C8FF2BD3D}\"\r\n            }\r\n        ],\r\n        \"metadata\": [\r\n            {\r\n                \"propertyName\": \"DVANote\",\r\n                \"propertyValue\": \"Line 1\\nLine 2\\n\\rLine 3\"\r\n            }\r\n        ]\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/document",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"document"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Document Content",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "username1",
+						"value": "svc_cwowdocs_dev"
+					},
+					{
+						"key": "password1",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7"
+					},
+					{
+						"key": "username",
+						"value": "SVC_KFP8_GCDADMIN_D",
+						"type": "text"
+					},
+					{
+						"key": "password",
+						"value": "2C54486E6AAF3E33EFD29952F1314D70",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceType\": \"patientDocs\",\r\n    \"appId\": \"ecmdocmgmt\",\r\n    \"appUser\": \"pguduri\", //Required for ECM Auditing\r\n    \"body\": {\r\n        \"searchFilter\": [\r\n            {\r\n                \"propertyName\": \"productRecallId\",\r\n                \"propertyValue\": \"11111\"\r\n            }\r\n        ],\r\n        \"content\": {\r\n            \"title\": \"C0B0FA823.pdf\",\r\n            \"contentType\": \"application/pdf\",\r\n            \"data\": \"JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDQyPj5zdHJlYW0KeJwrVDAzNFIwAEEDA3NLIxAFBDAqOZeXSz84L7/cQMElXyFQAQDg4goOCmVuZHN0cmVhbQplbmRvYmoKNCAwIG9iago8PC9Db250ZW50cyA1IDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L1Byb2NTZXQgNiAwIFIvWE9iamVjdDw8L1Nub3cwIDcgMCBSPj4+Pi9UeXBlL1BhZ2U+PgplbmRvYmoKMSAwIG9iago8PC9QYWdlcyAyIDAgUi9UeXBlL0NhdGFsb2c+PgplbmRvYmoKMyAwIG9iago8PC9DcmVhdGlvbkRhdGUoRDoyMDIxMDExMjIxNDYzNi0wOCcwMCcpL01vZERhdGUoRDoyMDIxMDExMjIxNDYzNi0wOCcwMCcpL1Byb2R1Y2VyKGlUZXh0riA3LjAuNSCpMjAwMC0yMDE3IGlUZXh0IEdyb3VwIE5WIFwoQUdQTC12ZXJzaW9uXCkpPj4KZW5kb2JqCjIgMCBvYmoKPDwvQ291bnQgMS9LaWRzWzQgMCBSXS9UeXBlL1BhZ2VzPj4KZW5kb2JqCjYgMCBvYmoKWy9QREYgL0ltYWdlQl0KZW5kb2JqCjcgMCBvYmoKPDwvQml0c1BlckNvbXBvbmVudCAxL0NvbG9yU3BhY2UvRGV2aWNlR3JheS9EZWNvZGVQYXJtczw8L0NvbHVtbnMgMTYzMi9FbmNvZGVkQnl0ZUFsaWduIGZhbHNlL0VuZE9mQmxvY2sgZmFsc2UvRW5kT2ZMaW5lIGZhbHNlL0sgLTEvUm93cyAyMTEyPj4vRmlsdGVyL0NDSVRURmF4RGVjb2RlL0hlaWdodCAyMTEyL0xlbmd0aCA2MDgvTmFtZS9Tbm93MC9TdWJ0eXBlL0ltYWdlL1R5cGUvWE9iamVjdC9XaWR0aCAxNjMyPj5zdHJlYW0K/////////////////5kFM7W3zsEeQQUyNXOxIF8mZnD/+Sx9r///8qT52UPH8f///7X/kMigZmDnBTRlzJzLvzMig84KdBmguQNmDMyIYycyhmDPnnx8JhB/phD8JhPwmE/CYTCYQeEwnhB9P+PggWcemh63xpqnGh/ROGifSdnVycNE4/6Jw5OJo0T7Pz5LKJw0T6icOSzJxRPvp6H6en4+nSfoRfoaehp6FJ6HpN3/pP+k3T6RrC9JNpJN1T3/kQP/+//+F///5EaxVxsP//rj/1+P/9h/b//x//RPv//7fwb////6///wb8sJ//+Xp//5ev/wfu//a+9rt6+7baXav4Z7Oa3+2vwz22vZ5Wt8M92eVrtqb17HFSEsg9+P2OM2DsbGyIosbGxXHFd9/392RR+7Io/3drZFH/DCDCf8Mm/wwg14aaw+GEGgwsNYYURERERxEREREREREREfK+ulj1DCj/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wAQAQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAyNTUgMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAowMDAwMDAwMzAwIDAwMDAwIG4gCjAwMDAwMDAxMjMgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwNTA4IDAwMDAwIG4gCjAwMDAwMDA1MzggMDAwMDAgbiAKdHJhaWxlcgo8PC9JRCBbPGYxMTI4MmIwNjM1NWJiNjBjNmE3NmQ5ODdiNGY0Zjk0PjxmMTEyODJiMDYzNTViYjYwYzZhNzZkOTg3YjRmNGY5ND5dL0luZm8gMyAwIFIvUm9vdCAxIDAgUi9TaXplIDg+PgolaVRleHQtNy4wLjUKc3RhcnR4cmVmCjE0MTgKJSVFT0YK\"\r\n        }\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/documents/documentcontent",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"documents",
+						"documentcontent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev",
+						"type": "text"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7",
+						"type": "text"
+					},
+					{
+						"key": "password_",
+						"value": "2C54486E6AAF3E33EFD29952F1314D70",
+						"type": "text"
+					},
+					{
+						"key": "username_",
+						"value": "SVC_KFP8_GCDADMIN_D",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceType\": \"patientDocs\",\r\n    \"appId\": \"ecmdocmgmt\",\r\n    \"body\": {\r\n        \"propertiesToRetrieve\": [\r\n            \"patientLastName\",\r\n            \"patientFirstName\",\r\n            \"dateOfBirth\",\r\n            \"patientId\",\r\n            \"documentType\",\r\n            \"facilityNumber\",\r\n            \"guid\"\r\n        ],\r\n        \"includeContent\": true,\r\n        \"currentVersionOnly\": true,\r\n        \"searchFilter\": [\r\n            {\r\n                \"prefix\": \"(\",\r\n                \"propertyName\": \"patientId\",\r\n                \"propertyValue\": \"110024\",\r\n                \"join\": \"OR\"\r\n            },\r\n            {\r\n                \"propertyName\": \"patientId\",\r\n                \"propertyValue\": \"080808\",\r\n                \"postfix\": \")\"\r\n            },\r\n            {\r\n                \"propertyName\": \"documentTypeCode\",\r\n                \"operator\": \"IN\",\r\n                \"propertyValues\": [\r\n                    \"es1_tbassessment\",\r\n                    \"es1_homepatientattestation\",\r\n                    \"es1_sscaideligletter\",\r\n                    \"es1_xray\"\r\n                ]\r\n            }\r\n        ],\r\n        \"sortBy\": [\r\n            {\r\n                \"propertyName\": \"patientId\"\r\n            },\r\n            {\r\n                \"propertyName\": \"dateOfBirth\",\r\n                \"order\": \"DESC\"\r\n            }\r\n        ]\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/gitInfo",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"gitInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "username",
+						"value": "svc_cwowdocs_dev",
+						"type": "text"
+					},
+					{
+						"key": "password",
+						"value": "ECCEB6EBECEB28A73E4124E72AAB35C7",
+						"type": "text"
+					},
+					{
+						"key": "password_",
+						"value": "2C54486E6AAF3E33EFD29952F1314D70",
+						"type": "text"
+					},
+					{
+						"key": "username_",
+						"value": "SVC_KFP8_GCDADMIN_D",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://ecmss-dev.davita.com/docs/api/v1/actuator/metrics/hikaricp.connections.idle?tag=pool:taxonomyCfgHikaryPool",
+					"protocol": "https",
+					"host": [
+						"ecmss-dev",
+						"davita",
+						"com"
+					],
+					"path": [
+						"docs",
+						"api",
+						"v1",
+						"actuator",
+						"metrics",
+						"hikaricp.connections.idle"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "pool:taxonomyCfgHikaryPool"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
