@@ -1,4 +1,4 @@
-package com.davita.ecm.ecmdocmgmt;
+package com.dkgeneric.filenetdocmgmt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,14 +24,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.dkgeneric.commons.config.GitInformations;
-import com.dkgeneric.commons.service.DavitaEncryptService;
-import com.davita.ecm.p8.content.common.ServiceException;
-import com.davita.ecm.p8.content.model.P8ResultSet;
-import com.davita.ecm.p8.content.model.SearchParameters;
-import com.davita.ecm.p8.content.provider.P8ProviderImpl;
-import com.davita.ecm.p8.content.request.BaseRequest;
-import com.davita.ecm.p8.content.response.BaseResponse;
-import com.davita.ecm.p8.content.service.AuthService;
+import com.dkgeneric.filenet.content.common.ServiceException;
+import com.dkgeneric.filenet.content.model.P8ResultSet;
+import com.dkgeneric.filenet.content.model.SearchParameters;
+import com.dkgeneric.filenet.content.provider.P8ProviderImpl;
+import com.dkgeneric.filenet.content.request.BaseRequest;
+import com.dkgeneric.filenet.content.response.BaseResponse;
+import com.dkgeneric.filenet.content.service.AuthService;
 import com.filenet.api.core.Document;
 import com.filenet.api.core.IndependentlyPersistableObject;
 import com.filenet.api.exception.EngineRuntimeException;
@@ -50,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableEncryptableProperties
 @AutoConfigureMockMvc
 @Slf4j
-class ECMDocumentManagementApplicationTests {
+class FilenetDocumentManagementApplicationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -58,8 +57,6 @@ class ECMDocumentManagementApplicationTests {
 	private GitInformations gitInformations;
 	@Autowired
 	AuthService authService;
-	@Autowired
-	protected DavitaEncryptService davitaEncryptService;
 
 	// instance of P8ProviderImpl to perform "utility" tasks (like getObject...)
 	P8ProviderImpl p8ProviderImpl;
@@ -126,7 +123,8 @@ class ECMDocumentManagementApplicationTests {
 
 	@BeforeAll
 	void initialize() throws Exception {
-		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.davita.ecm.p8.content")).setLevel(LIB_LOG_LEVEL);
+		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.dkgeneric.audit.content"))
+				.setLevel(LIB_LOG_LEVEL);
 		log.info("Test started.");
 		log.info("Initialization code started.");
 		log.info(gitInformations.printAllGitInfo());

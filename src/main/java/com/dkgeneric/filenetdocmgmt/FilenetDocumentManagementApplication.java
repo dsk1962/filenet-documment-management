@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 
-@SpringBootApplication(scanBasePackages = { "com.davita.*" }, exclude = { DataSourceAutoConfiguration.class })
+@SpringBootApplication(scanBasePackages = { "com.dkgeneric.*" }, exclude = { DataSourceAutoConfiguration.class })
 @EnableEncryptableProperties
 @EnableCaching
 @EnableTransactionManagement
-public class ECMDocumentManagementApplication {
+public class FilenetDocumentManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ECMDocumentManagementApplication.class, args);
+		SpringApplication.run(FilenetDocumentManagementApplication.class, args);
 	}
 
 }

@@ -20,16 +20,15 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.davita.ecm.p8.audit.model.RequestParameter;
-import com.davita.ecm.p8.audit.model.WebServiceRequestAuditEntry;
+import com.dkgeneric.audit.model.RequestParameter;
+import com.dkgeneric.audit.model.WebServiceRequestAuditEntry;
 import com.dkgeneric.commons.model.json.JsonDocument;
 import com.dkgeneric.commons.model.json.JsonDocumentWithSearchFilter;
 import com.dkgeneric.commons.model.json.JsonResource;
 import com.dkgeneric.commons.model.json.JsonSearch;
-import com.dkgeneric.commons.service.ImageConversionService;
-import com.dkgeneric.commons.service.P8PropMappingService;
+import com.dkgeneric.commons.service.FilenetPropMappingService;
 import com.dkgeneric.commons.service.ValidationService;
-import com.davita.ecm.p8.content.resources.P8ContentResource;
+import com.dkgeneric.filenet.content.resources.P8ContentResource;
 import com.dkgeneric.filenetdocmgmt.configuration.ApplicationConfiguration;
 import com.dkgeneric.filenetdocmgmt.service.DocumentManagementService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -48,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DocumentManagementController extends ECMBaseController {
 
 	public DocumentManagementController(DocumentManagementService documentManagementService,
-			ApplicationConfiguration applicationConfiguration, P8PropMappingService p8PropMappingService,
+			ApplicationConfiguration applicationConfiguration, FilenetPropMappingService p8PropMappingService,
 			ValidationService validationService) {
 		super(applicationConfiguration, p8PropMappingService, validationService);
 		this.documentManagementService = documentManagementService;
@@ -64,8 +63,7 @@ public class DocumentManagementController extends ECMBaseController {
 
 	@Operation(description = "Create new document")
 	@PostMapping(path = "document", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JsonNode> createDocument(@RequestBody JsonResource<JsonDocument> jsonResource,
-			@RequestHeader String username, @RequestHeader String password) throws Exception {
+	public ResponseEntity<JsonNode> createDocument(@RequestBody JsonResource<JsonDocument> jsonResource) throws Exception {
 		log.info("POST /document. resource: {} ", jsonResource);
 		WebServiceRequestAuditEntry auditEntry = auditService.createWebServiceRequestAuditEntry(CREATE_DOCUMENT,
 				new RequestParameter(RequestParameter.BODY_PARAMETER_NAME, jsonResource));
@@ -101,8 +99,7 @@ public class DocumentManagementController extends ECMBaseController {
 
 	@Operation(description = "Retrieve  documents")
 	@PostMapping(path = "document/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<JsonDocument>> searchDocuments(@RequestBody JsonResource<JsonSearch> jsonResource,
-			@RequestHeader String username, @RequestHeader String password) throws Exception {
+	public ResponseEntity<List<JsonDocument>> searchDocuments(@RequestBody JsonResource<JsonSearch> jsonResource) throws Exception {
 		log.info("POST /document/search. resource: {} ", jsonResource);
 		WebServiceRequestAuditEntry auditEntry = auditService.createWebServiceRequestAuditEntry(RETRIEVE_DOCUMENTS,
 				new RequestParameter(RequestParameter.BODY_PARAMETER_NAME, jsonResource));
@@ -115,8 +112,7 @@ public class DocumentManagementController extends ECMBaseController {
 
 	@Operation(description = "Update document properties")
 	@PutMapping(path = "document", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public JsonNode updateDocument(@RequestBody JsonResource<JsonDocumentWithSearchFilter> jsonResource,
-			@RequestHeader String username, @RequestHeader String password) throws Exception {
+	public JsonNode updateDocument(@RequestBody JsonResource<JsonDocumentWithSearchFilter> jsonResource) throws Exception {
 		log.info("PUT /document. resource: {} ", jsonResource);
 		WebServiceRequestAuditEntry auditEntry = auditService.createWebServiceRequestAuditEntry(UPDATE_DOCUMENT,
 				new RequestParameter(RequestParameter.BODY_PARAMETER_NAME, jsonResource));
@@ -129,8 +125,7 @@ public class DocumentManagementController extends ECMBaseController {
 
 	@Operation(description = "Update document properties and content(Create new version)")
 	@PutMapping(path = "documentcontent", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public JsonNode updateDocumentContent(@RequestBody JsonResource<JsonDocumentWithSearchFilter> jsonResource,
-			@RequestHeader String username, @RequestHeader String password) throws Exception {
+	public JsonNode updateDocumentContent(@RequestBody JsonResource<JsonDocumentWithSearchFilter> jsonResource) throws Exception {
 		log.info("PUT /documentcontent. resource: {} ", jsonResource);
 		WebServiceRequestAuditEntry auditEntry = auditService.createWebServiceRequestAuditEntry(CREATE_VESRION,
 				new RequestParameter(RequestParameter.BODY_PARAMETER_NAME, jsonResource));
@@ -144,15 +139,12 @@ public class DocumentManagementController extends ECMBaseController {
 	@Operation(description = "Get document content")
 	@GetMapping(path = "document/content")
 	public ResponseEntity<InputStreamResource> getContent(@RequestParam String guid,
-			@RequestParam(required = false) boolean tifftopdf, @RequestParam(required = false) String converter)
-			throws Exception {
+			@RequestParam(required = false) String converter) throws Exception {
 		log.info("GET /document/content. guid: {} ", guid);
 		WebServiceRequestAuditEntry auditEntry = auditService.createWebServiceRequestAuditEntry(GET_CONTENT,
 				new RequestParameter("guid", guid));
 		auditEntry.setAppServiceAccount(getServiceAccount());
 		auditEntry.setObjectId(guid);
-		if( tifftopdf )
-			converter = ImageConversionService.TIFF_TO_PDF;
 		P8ContentResource p8ContentResource = documentManagementService.getContent(guid, converter);
 		if (p8ContentResource == null)
 			return ResponseEntity.noContent().build();

@@ -1,48 +1,45 @@
 package com.dkgeneric.filenetdocmgmt.service;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.davita.ecm.p8.audit.model.WebServiceRequestAuditEntry;
+import com.dkgeneric.audit.model.WebServiceRequestAuditEntry;
 import com.dkgeneric.commons.common.ExceptionConstants;
-import com.dkgeneric.commons.exceptions.EcmErrorMessageServiceException;
-import com.dkgeneric.commons.exceptions.ObjectStoreNotFoundException;
+import com.dkgeneric.commons.exceptions.CommonsErrorMessageServiceException;
+import com.dkgeneric.commons.exceptions.FilenetPropMappingNotFoundException;
 import com.dkgeneric.commons.model.json.JsonDocument;
 import com.dkgeneric.commons.model.json.JsonDocumentWithSearchFilter;
 import com.dkgeneric.commons.model.json.JsonProperty;
 import com.dkgeneric.commons.model.json.JsonResource;
 import com.dkgeneric.commons.model.json.JsonSearch;
 import com.dkgeneric.commons.service.ImageConversionService;
-import com.davita.ecm.p8.content.common.ECMConstants;
-import com.davita.ecm.p8.content.common.ServiceException;
-import com.davita.ecm.p8.content.model.P8ContentObject;
-import com.davita.ecm.p8.content.model.P8Object;
-import com.davita.ecm.p8.content.request.CreateDocumentRequest;
-import com.davita.ecm.p8.content.request.CreateDocumentVersionRequest;
-import com.davita.ecm.p8.content.request.GetContentRequest;
-import com.davita.ecm.p8.content.request.GetDocumentByIdRequest;
-import com.davita.ecm.p8.content.request.SearchRequest;
-import com.davita.ecm.p8.content.request.UpdateDocumentMetadataRequest;
-import com.davita.ecm.p8.content.resources.P8ContentResource;
-import com.davita.ecm.p8.content.response.CreateDocumentResponse;
-import com.davita.ecm.p8.content.response.CreateDocumentVersionResponse;
-import com.davita.ecm.p8.content.response.GetContentResponse;
-import com.davita.ecm.p8.content.response.GetDocumentByIdResponse;
-import com.davita.ecm.p8.content.response.SearchResponse;
-import com.davita.ecm.p8.content.response.UpdateDocumentMetadataResponse;
-import com.davita.jpa.ecmaudit.kafka.model.KafkaOperationAuditLog;
-import com.davita.jpa.taxonomy.p8.audit.model.P8OperationAuditLog;
-import com.davita.jpa.taxonomy.p8.commons.model.DocClassDocTypeView;
+import com.dkgeneric.filenet.content.common.ServiceException;
+import com.dkgeneric.filenet.content.model.P8ContentObject;
+import com.dkgeneric.filenet.content.model.P8Object;
+import com.dkgeneric.filenet.content.request.CreateDocumentRequest;
+import com.dkgeneric.filenet.content.request.CreateDocumentVersionRequest;
+import com.dkgeneric.filenet.content.request.GetContentRequest;
+import com.dkgeneric.filenet.content.request.GetDocumentByIdRequest;
+import com.dkgeneric.filenet.content.request.SearchRequest;
+import com.dkgeneric.filenet.content.request.UpdateDocumentMetadataRequest;
+import com.dkgeneric.filenet.content.resources.P8ContentResource;
+import com.dkgeneric.filenet.content.response.CreateDocumentResponse;
+import com.dkgeneric.filenet.content.response.CreateDocumentVersionResponse;
+import com.dkgeneric.filenet.content.response.GetContentResponse;
+import com.dkgeneric.filenet.content.response.GetDocumentByIdResponse;
+import com.dkgeneric.filenet.content.response.SearchResponse;
+import com.dkgeneric.filenet.content.response.UpdateDocumentMetadataResponse;
 import com.dkgeneric.filenetdocmgmt.configuration.ApplicationConfiguration;
 import com.dkgeneric.filenetdocmgmt.controller.DocumentManagementController;
+import com.dkgeneric.jpa.audit.kafka.model.KafkaOperationAuditLog;
+import com.dkgeneric.jpa.audit.repository.model.FilenetOperationAuditLog;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -50,10 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class DocumentManagementService extends ECMBaseService {
-
-	private static final String TIFFMIMETYPE = "image/tiff";
-	private static final String PDFMIMETYPE = MediaType.APPLICATION_PDF_VALUE;
+public class DocumentManagementService extends FilenetBaseService {
 
 	public String createDocument(JsonResource<JsonDocument> jsonResource, MultipartFile file) throws Exception {
 		jsonResource.getBody().applyMultipartFile(file);
@@ -66,11 +60,10 @@ public class DocumentManagementService extends ECMBaseService {
 		request.setP8ContentObject(p8ContentObject);
 		mappingService.convertJsonDocument(jsonResource.getBody(), jsonResource.getAppId(), request, true);
 		mappingService.validateRequiredProperties(jsonResource.getAppId(), p8ContentObject);
-		setCredentials(request);
 		CreateDocumentResponse response = documentService.createDocument(request);
 		if (!response.success())
 			throw new ServiceException(response.getErrorCode(), response.getErrorMessage());
-		P8OperationAuditLog entry = p8ContentLibConverter.convert(response);
+		FilenetOperationAuditLog entry = p8ContentLibConverter.convert(response);
 		entry.setAppId(ApplicationConfiguration.APPLICATION_NAME);
 		entry.setAppUser(jsonResource.getAppUser());
 		entry.setAppEvent(DocumentManagementController.CREATE_DOCUMENT);
@@ -84,7 +77,7 @@ public class DocumentManagementService extends ECMBaseService {
 		notifyKafka(response, jsonResource);
 		return response.getP8DocumentId();
 	}
-	
+
 	private void notifyKafka(CreateDocumentResponse response, JsonResource<JsonDocument> jsonResource) {
 		String message = null;
 		// send notification for specific appIds only
@@ -96,14 +89,15 @@ public class DocumentManagementService extends ECMBaseService {
 			try {
 				message = objectMapper.writeValueAsString(root);
 				// send async
-				kafkaProducerService.sendMessageInSeparateThread(applicationConfiguration.getKafkaTopic(), null, message,KafkaOperationAuditLog.createAuditParametersMap(jsonResource.getAppId(), jsonResource.getAppUser(),
-                        response.getP8DocumentId(), "Create Document"));
+				kafkaProducerService.sendMessageInSeparateThread(applicationConfiguration.getKafkaTopic(), null,
+						message, KafkaOperationAuditLog.createAuditParametersMap(jsonResource.getAppId(),
+								jsonResource.getAppUser(), response.getP8DocumentId(), "Create Document"));
 			} catch (JsonProcessingException e) {
 				log.error("Failed to convert data to message for kafka.", e);
 			}
 		}
 	}
-	
+
 	private void addDocumentDetails(ObjectNode jsonNode, P8Object p8Object, String appId) {
 		List<JsonProperty> list = mappingService.convertToJsonPropertyList(appId, p8Object, true);
 		List<JsonProperty> result = new ArrayList<>(list.size());
@@ -124,26 +118,17 @@ public class DocumentManagementService extends ECMBaseService {
 	}
 
 	private P8ContentObject createP8ContentObject(String resourceType) {
-		try {
-			P8ContentObject p8ContentObject = new P8ContentObject();
-			DocClassDocTypeView classDocTypeView = taxonomyServiceCache.getObjectStoreByDocType(resourceType);
-			p8ContentObject.setDocumentClass(classDocTypeView.getDocClassCode());
-			p8ContentObject.getProperties().addProperty(ECMConstants.DVA_DOCUMENTTYPECODE_PROPERTYNAME,
-					classDocTypeView.getDocTypeCode());
-			p8ContentObject.getProperties().addProperty(ECMConstants.DVA_DOCUMENTTYPE_PROPERTYNAME,
-					classDocTypeView.getDocTypeDisplayName());
-			return p8ContentObject;
-		} catch (ObjectStoreNotFoundException e) {
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.unknownresourcetype", resourceType);
-		}
+		P8ContentObject p8ContentObject = new P8ContentObject();
+		p8ContentObject.setDocumentClass(resourceType);
+		return p8ContentObject;
 	}
 
-	private P8Object findByFilter(JsonResource<JsonDocumentWithSearchFilter> jsonResource) throws Exception {
+	private P8Object findByFilter(JsonResource<JsonDocumentWithSearchFilter> jsonResource) throws FilenetPropMappingNotFoundException, ServiceException {
 		if (CollectionUtils.isEmpty(jsonResource.getBody().getSearchFilter()))
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.nofilter");
+			throw new CommonsErrorMessageServiceException("ecmdocmgmt.validation.nofilter");
 		if (jsonResource.getBody().getSearchFilter().size() == 1) {
 			JsonProperty jsonProperty = jsonResource.getBody().getSearchFilter().get(0);
-			String name = p8PropMappingService.getSymbolicNameMappingFromDb(jsonResource.getAppId(),
+			String name = p8PropMappingService.getFilenetNameMappingFromDb(jsonResource.getAppId(),
 					jsonProperty.getPropertyName());
 			if ("id".equalsIgnoreCase(name) || name == null && "id".equalsIgnoreCase(jsonProperty.getPropertyName())) {
 				GetDocumentByIdRequest request = new GetDocumentByIdRequest();
@@ -163,7 +148,6 @@ public class DocumentManagementService extends ECMBaseService {
 		jsonSearchResource.setResourceType(jsonResource.getResourceType());
 		jsonSearch = mappingService.preprocessSearchResource(jsonSearchResource);
 		SearchRequest request = new SearchRequest();
-		setCredentials(request);
 		request.getSearchData().setJsonSearch(jsonSearch);
 		int maxResults = (jsonSearch.isIncludeContent() ? applicationConfiguration.getMaxResultsWithContent()
 				: applicationConfiguration.getMaxResults());
@@ -173,16 +157,15 @@ public class DocumentManagementService extends ECMBaseService {
 			throw new ServiceException(response.getErrorCode(), response.getErrorMessage());
 		List<P8Object> p8List = response.getSearchResults();
 		if (CollectionUtils.isEmpty(p8List))
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.filternodocumentfound");
+			throw new CommonsErrorMessageServiceException("ecmdocmgmt.validation.filternodocumentfound");
 		if (p8List.size() != 1)
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.filtermultipleresults", p8List.size());
+			throw new CommonsErrorMessageServiceException("ecmdocmgmt.validation.filtermultipleresults", p8List.size());
 		return p8List.get(0);
 	}
 
-	public List<JsonDocument> searchDocuments(JsonResource<JsonSearch> jsonSearchResource) throws Exception {
+	public List<JsonDocument> searchDocuments(JsonResource<JsonSearch> jsonSearchResource) throws FilenetPropMappingNotFoundException, ServiceException, IOException  {
 		JsonSearch jsonSearch = mappingService.preprocessSearchResource(jsonSearchResource);
 		SearchRequest request = new SearchRequest();
-		setCredentials(request);
 		request.getSearchData().setJsonSearch(jsonSearch);
 		int maxResults = (jsonSearch.isIncludeContent() ? applicationConfiguration.getMaxResultsWithContent()
 				: applicationConfiguration.getMaxResults());
@@ -193,7 +176,7 @@ public class DocumentManagementService extends ECMBaseService {
 		List<P8Object> list = response.getSearchResults();
 
 		if (!CollectionUtils.isEmpty(list) && list.size() >= maxResults)
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.toomuchresults", maxResults);
+			throw new CommonsErrorMessageServiceException("ecmdocmgmt.validation.toomuchresults", maxResults);
 
 		List<JsonDocument> result = new ArrayList<>();
 
@@ -203,19 +186,19 @@ public class DocumentManagementService extends ECMBaseService {
 		return result;
 	}
 
-	public void updateDocument(JsonResource<JsonDocumentWithSearchFilter> jsonResource,WebServiceRequestAuditEntry auditEntry) throws Exception {
+	public void updateDocument(JsonResource<JsonDocumentWithSearchFilter> jsonResource,
+			WebServiceRequestAuditEntry auditEntry) throws Exception {
 		if (jsonResource.getBody().getContent() != null)
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.contentisnotallowed");
+			throw new CommonsErrorMessageServiceException("ecmdocmgmt.validation.contentisnotallowed");
 		P8Object p8Object = findByFilter(jsonResource);
 		UpdateDocumentMetadataRequest request = new UpdateDocumentMetadataRequest();
 		mappingService.convertJsonDocument(jsonResource.getBody(), jsonResource.getAppId(), request, true);
 		request.setId(p8Object.getId());
 		auditEntry.setObjectId(p8Object.getId());
-		setCredentials(request);
 		UpdateDocumentMetadataResponse response = documentService.updateDocumentMetadata(request);
 		if (!response.success())
 			throw new ServiceException(response.getErrorCode(), response.getErrorMessage());
-		P8OperationAuditLog entry = p8ContentLibConverter.convert(response).get(0);
+		FilenetOperationAuditLog entry = p8ContentLibConverter.convert(response).get(0);
 		entry.setAppId(ApplicationConfiguration.APPLICATION_NAME);
 		entry.setAppUser(jsonResource.getAppUser());
 		entry.setAppEvent(DocumentManagementController.UPDATE_DOCUMENT);
@@ -226,9 +209,10 @@ public class DocumentManagementService extends ECMBaseService {
 		}
 	}
 
-	public void createDocumentVersion(JsonResource<JsonDocumentWithSearchFilter> jsonResource,WebServiceRequestAuditEntry auditEntry) throws Exception {
+	public void createDocumentVersion(JsonResource<JsonDocumentWithSearchFilter> jsonResource,
+			WebServiceRequestAuditEntry auditEntry) throws Exception {
 		if (jsonResource.getBody().getContent() == null)
-			throw new EcmErrorMessageServiceException("ecmdocmgmt.validation.contentrequired");
+			throw new CommonsErrorMessageServiceException("ecmdocmgmt.validation.contentrequired");
 		P8Object p8Object = findByFilter(jsonResource);
 
 		CreateDocumentVersionRequest request = new CreateDocumentVersionRequest();
@@ -236,12 +220,11 @@ public class DocumentManagementService extends ECMBaseService {
 		request.setP8ContentObject(p8ContentObject);
 		request.setP8ObjectId(p8Object.getId());
 		mappingService.convertJsonDocument(jsonResource.getBody(), jsonResource.getAppId(), request, true);
-		setCredentials(request);
 		CreateDocumentVersionResponse response = documentService.createDocumentVersion(request);
 		if (!response.success())
 			throw new ServiceException(response.getErrorCode(), response.getErrorMessage());
 		auditEntry.setObjectId(response.getP8DocumentId());
-		P8OperationAuditLog entry = p8ContentLibConverter.convert(response);
+		FilenetOperationAuditLog entry = p8ContentLibConverter.convert(response);
 		entry.setAppId(ApplicationConfiguration.APPLICATION_NAME);
 		entry.setAppUser(jsonResource.getAppUser());
 		entry.setAppEvent(DocumentManagementController.CREATE_VESRION);
@@ -251,6 +234,7 @@ public class DocumentManagementService extends ECMBaseService {
 			log.error(SAVE_P8AUDIT_ERROR, entry, e);
 		}
 	}
+
 	private P8ContentResource convertToPdf(P8ContentResource p8ContentResource) throws Exception {
 		p8ContentResource.setResourceObject(
 				pdfService.convertToPDFStream(p8ContentResource.getInputStream(), p8ContentResource.getContentType()));
@@ -262,12 +246,11 @@ public class DocumentManagementService extends ECMBaseService {
 		return p8ContentResource;
 	}
 
-	public P8ContentResource getContent( String guid, String converter ) throws Exception {
+	public P8ContentResource getContent(String guid, String converter) throws Exception {
 		GetContentRequest request = new GetContentRequest();
 		request.setDocumentId(guid);
-		setCredentials(request);
 		GetContentResponse response = contentService.getContent(request);
-		if( response.getErrorType() == ExceptionConstants.NOT_FOUND_ERROR_TYPE)
+		if (response.getErrorType() == ExceptionConstants.NOT_FOUND_ERROR_TYPE)
 			return null;
 		if (!response.success())
 			throw new ServiceException(response.getErrorCode(), response.getErrorMessage());
