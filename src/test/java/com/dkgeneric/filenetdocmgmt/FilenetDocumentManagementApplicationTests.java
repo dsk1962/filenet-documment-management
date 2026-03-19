@@ -75,14 +75,6 @@ class FilenetDocumentManagementApplicationTests {
 	@Setter
 	@Value("${jsonUpdateText}")
 	private String jsonUpdateText;
-	@Getter
-	@Setter
-	@Value("${userNameHeader}")
-	private String userNameHeader;
-	@Getter
-	@Setter
-	@Value("${passwordHeader}")
-	private String passwordHeader;
 
 	@Test
 	void contextLoads() {
@@ -93,32 +85,30 @@ class FilenetDocumentManagementApplicationTests {
 	@Order(1)
 	void createTest() throws Exception {
 		log.info("Create test started.");
-		mockMvc.perform(post("/documents/document").header("username", userNameHeader)
-				.header("password", passwordHeader).contentType(MediaType.APPLICATION_JSON).content(jsonCreateText))
+		mockMvc.perform(post("/documents/document").contentType(MediaType.APPLICATION_JSON).content(jsonCreateText))
 				.andExpect(status().isCreated()).andReturn();
 		log.info("Create test completed.");
 	}
 
 	@Test
 	@Order(2)
-	void updateTest() throws Exception {
+	void searchTest() throws Exception {
 
-		log.info("Update test started.");
-		mockMvc.perform(put("/documents/document").header("username", userNameHeader).header("password", passwordHeader)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonUpdateText)).andExpect(status().isOk())
-				.andReturn();
-		log.info("Update test completed.");
+		log.info("Search test started.");
+		mockMvc.perform(post("/documents/document/search").contentType(MediaType.APPLICATION_JSON).content(jsonSearchText))
+				.andExpect(jsonPath("$", hasSize(1))).andExpect(status().isOk()).andReturn();
+		log.info("Search test completed.");
 	}
 
 	@Test
 	@Order(3)
-	void searchTest() throws Exception {
+	void updateTest() throws Exception {
 
-		log.info("Search test started.");
-		mockMvc.perform(post("/documents/document/search").header("username", userNameHeader)
-				.header("password", passwordHeader).contentType(MediaType.APPLICATION_JSON).content(jsonSearchText))
-				.andExpect(jsonPath("$", hasSize(1))).andExpect(status().isOk()).andReturn();
-		log.info("Search test completed.");
+		log.info("Update test started.");
+		mockMvc.perform(put("/documents/document")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonUpdateText)).andExpect(status().isOk())
+				.andReturn();
+		log.info("Update test completed.");
 	}
 
 	@BeforeAll
@@ -153,7 +143,7 @@ class FilenetDocumentManagementApplicationTests {
 
 	BaseResponse cleanTestDocuments() throws ServiceException {
 		BaseResponse response = new BaseResponse();
-		String query = "select Id from ebf1_admissions WHERE DVALastName='ECMDocumentManagementTest'";
+		String query = "select Id from FilenetLibTest WHERE DocumentTitle LIKE 'FilenetLibTest%'";
 		P8ResultSet p8ResultSet = p8ProviderImpl.searchDocuments(query, new SearchParameters());
 		if (p8ResultSet.getSearchResults().size() > 10)
 			throw new ServiceException("Too much documnets to delete. Clean up repository manually. Query : " + query);
