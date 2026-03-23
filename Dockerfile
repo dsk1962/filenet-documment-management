@@ -4,4 +4,5 @@ RUN groupadd -g 1234 fn && useradd -m -u 1234 -g fn docmgmt
 USER docmgmt
 WORKDIR /deploy
 COPY --chown=fn:docmgmt ${JAR_FILE} ./FilenetDocumentManagement-lts.jar
+EXPORT PORT=8072
 ENTRYPOINT ["java","-Dspring.config.location=file:///app/shared_files/application_shared.properties,classpath:/application.properties","-jar","./FilenetDocumentManagement-lts.jar"]
