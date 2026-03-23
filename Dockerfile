@@ -5,4 +5,4 @@ USER docmgmt
 WORKDIR /deploy/bin
 COPY --chown=fn:docmgmt ${JAR_FILE} ./FilenetDocumentManagement-lts.jar
 EXPOSE 8072
-ENTRYPOINT ["java","-Dspring.config.location=file:///app/shared_files/application_shared.properties,classpath:/application.properties","-jar","./FilenetDocumentManagement-lts.jar"]
+ENTRYPOINT ["java","-Dspring.config.location=file:///springbootservices/shared_files/application_shared.properties,classpath:/application.properties","-jar","./FilenetDocumentManagement-lts.jar"]
